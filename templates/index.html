@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Contactos</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Contactos</h1>
+        <div class="form-container">
+            <form action="/agregar" method="POST" enctype="multipart/form-data">
+                <input type="text" name="nombre" placeholder="Nombre" required>
+                <input type="text" name="telefono" placeholder="Teléfono" required>
+                <input type="file" name="imagen" accept="image/*" required>
+                <button type="submit">Agregar Contacto</button>
+            </form>
+        </div>
+
+        <h2>Lista de Contactos</h2>
+        <ul class="contact-list">
+            {% for contacto in contactos %}
+                <li class="contact-item">
+                    <span>{{ contacto.nombre }} - {{ contacto.telefono }}</span>
+                    <form action="/actualizar/{{ loop.index0 }}" method="POST" enctype="multipart/form-data" class="inline-form">
+                        <input type="text" name="nombre" placeholder="Nuevo Nombre">
+                        <input type="text" name="telefono" placeholder="Nuevo Teléfono">
+                        <input type="file" name="imagen" accept="image/*">
+                        <button type="submit">Actualizar</button>
+                    </form>
+                    <a href="/eliminar/{{ loop.index0 }}" class="delete-btn">Eliminar</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h2>Contactos en Tabla</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Teléfono</th>
+                    <th>Imagen</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for contacto in contactos %}
+                <tr>
+                    <td>{{ loop.index }}</td>
+                    <td>{{ contacto.nombre }}</td>
+                    <td>{{ contacto.telefono }}</td>
+                    <td><img src="{{ url_for('static', filename='uploads/' ~ contacto.imagen) }}" alt="Imagen de {{ contacto.nombre }}" width="50" height="50"></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
